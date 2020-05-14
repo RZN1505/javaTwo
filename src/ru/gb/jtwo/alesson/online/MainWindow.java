@@ -2,6 +2,7 @@ package ru.gb.jtwo.alesson.online;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 
 public class MainWindow extends JFrame {
 
@@ -10,7 +11,7 @@ public class MainWindow extends JFrame {
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
 
-    Sprite[] sprites = new Sprite[100];
+    Sprite[] sprites = new Sprite[2];
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -26,6 +27,7 @@ public class MainWindow extends JFrame {
         setBounds(POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT);
         setResizable(false);
         MainCanvas canvas = new MainCanvas(this);
+        Background bg = new Background(canvas);
         initApplication();
         add(canvas);
         setTitle("Circles");
@@ -35,6 +37,42 @@ public class MainWindow extends JFrame {
     private void initApplication() {
         for (int i = 0; i < sprites.length; i++) {
             sprites[i] = new Ball();
+        }
+    }
+
+    public Sprite[] remove(Sprite[] arr, int index) {
+        if (index >= 0 && index < arr.length) {
+            Sprite[] copy = new Sprite[arr.length - 1];
+            System.arraycopy(arr, 0, copy, 0, index);
+            System.arraycopy(arr, index + 1, copy, index, arr.length - index - 1);
+            return copy;
+        }
+        return arr;
+    }
+
+    public Sprite[] add(Sprite[] arr) {
+        Sprite[] newArray = Arrays.copyOf(arr, arr.length + 1);
+        newArray[newArray.length - 1]= new Ball();
+        return newArray;
+    }
+
+    void onActionHandler(String action) {
+        int helperVar = sprites.length;
+        Sprite[] helper = sprites;
+        System.out.println("helperVar ");
+        System.out.println(helperVar);
+        switch (action) {
+            case "inc":
+                sprites = add(helper);
+                ;
+                System.out.println(sprites.length);
+                break;
+            case "dec":
+                sprites = remove(helper, 1);
+                System.out.println(sprites.length);
+                break;
+            default:
+                break;
         }
     }
 
@@ -73,7 +111,7 @@ public class MainWindow extends JFrame {
             zoo[i].walk();
 
             if (zoo[i] instanceof Bird) {
-                ( (Bird) zoo[i] ).fly();
+                ((Bird) zoo[i]).fly();
             }
         }
     }
