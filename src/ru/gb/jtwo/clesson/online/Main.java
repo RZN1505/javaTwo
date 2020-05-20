@@ -27,6 +27,42 @@ public class Main {
             System.out.printf("key=%s, val=%d", entry.getKey(), entry.getValue());
         }
 
+        partOne("Преобразовать все элементы массива в числа типа int просуммировать их Преобразовать все элементы массива в числа типа long просуммировать их");
+        partTwo();
+
+    }
+
+    private static void partOne(String str) {
+        String[] arr = str.split(" ");
+        ArrayList<String> arrayList = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        for (String id : arr) {
+            if (map.containsKey(id)) {
+                int helper = map.get(id);
+                helper++;
+                map.put(id, helper);
+            } else {
+                map.put(id, 1);
+                arrayList.add(id);
+            }
+        }
+        System.out.println(arrayList);
+        System.out.println(map);
+    }
+
+    private static void partTwo() {
+        PhoneBook book = new PhoneBook("one");
+        book.add("liskov", 9999, "liskov@rr.ru");
+        book.add("liskov", 9998, "liskov1@rr.ru");
+        book.add("liskov", 9998, "liskov1@rr.ru");
+        book.add("liskov", 9999, "liskov@rr.ru");
+        book.add("liskov", 9999, "liskov1@rr567.ru");
+        book.add("horstman", 9955, "horstman1@rr567.ru");
+        System.out.println(book);
+        System.out.println(book.getPhoneList("liskov"));
+        System.out.println(book.getEmailList("liskov"));
+        System.out.println(book.getPhoneList("horstman"));
+        System.out.println(book.getEmailList("horstman"));
     }
 
     private static void setExample() {
