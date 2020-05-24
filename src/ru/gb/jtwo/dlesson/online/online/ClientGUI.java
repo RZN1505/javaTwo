@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 
 public class ClientGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
 
@@ -26,7 +27,19 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
     private final JList<String> userList = new JList<>();
 
-    public static void main(String[] args) {
+    static void writeFile(String text) {
+        BufferedWriter writer = null;
+        try {
+            writer = new BufferedWriter(new FileWriter("output.txt", true));
+            writer.append(text);
+            writer.newLine();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args)  {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -48,6 +61,8 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         userList.setListData(users);
         scrollUser.setPreferredSize(new Dimension(100, 0));
         cbAlwaysOnTop.addActionListener(this);
+        tfMessage.addActionListener(this);
+        btnSend.addActionListener(this);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -72,12 +87,17 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Object src = e.getSource();
-        if (src == cbAlwaysOnTop) {
-            setAlwaysOnTop(cbAlwaysOnTop.isSelected());
-        } else {
-            throw new RuntimeException("Unknown source: " + src);
-        }
+            Object src = e.getSource();
+            if (src == cbAlwaysOnTop) {
+                setAlwaysOnTop(cbAlwaysOnTop.isSelected());
+            }else if (src == tfMessage || src == btnSend) {
+                String msgUser = tfMessage.getText();
+                tfMessage.setText("");
+                log.append( msgUser + "\n");
+                 writeFile( msgUser + "\n");
+            } else {
+                throw new RuntimeException("Unknown source: " + src);
+            }
     }
 
     @Override
