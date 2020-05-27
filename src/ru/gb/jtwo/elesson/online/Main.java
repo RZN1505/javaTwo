@@ -50,6 +50,7 @@ public class Main {
     }
 
     private static void createArrTwo(int h, float[] arr) {
+        long a1t = System.currentTimeMillis();
         float[] a1 = new float[h];;
         float[] a2 = new float[h];
         System.arraycopy(arr, 0, a1, 0, h);
@@ -67,10 +68,21 @@ public class Main {
                 createArrOne(h, a2);
             }
         };
-       new Thread(r1, "Thread#1").start();
-       new Thread(r2, "Thread#2").start();
-        System.arraycopy(a1, 0, arr, 0, h);
-        System.arraycopy(a2, 0, arr, h, h);
+        Thread t1 = new Thread(r1, "Thread#1");
+        t1.start();
+        Thread t2 = new Thread(r2, "Thread#2");
+        t2.start();
+
+        try {
+            t1.join();
+            t2.join();
+            System.arraycopy(a1, 0, arr, 0, h);
+            System.arraycopy(a2, 0, arr, h, h);
+            long b1 = System.currentTimeMillis();
+            System.out.printf("res2=%d\n",b1 - a1t);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        };
 
     }
 
@@ -80,10 +92,7 @@ public class Main {
         long b = System.currentTimeMillis();
         System.out.printf("res1=%d\n",b - a);
 
-        long a1 = System.currentTimeMillis();
         createArrTwo(h, arr);
-        long b1 = System.currentTimeMillis();
-        System.out.printf("res2=%d\n",b1 - a1);
        /* new Thread(r, "Thread#1").start();
         new Thread(r, "Thread#2").start();
         new Thread(r, "Thread#3").start();*/
