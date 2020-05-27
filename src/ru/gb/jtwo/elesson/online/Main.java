@@ -1,6 +1,9 @@
 package ru.gb.jtwo.elesson.online;
 
 public class Main {
+    static final int size = 10000000;
+    static final int h = size / 2;
+    static float[] arr = new float[size];
 
     private static class MyThread extends Thread {
         MyThread(String name) {
@@ -36,17 +39,54 @@ public class Main {
         }
     }
 
-    public static void main(String[] args) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                increment();
-            }
+    private static void createArrOne(int size, float[] arr) {
+        for (int i = 0; i < size; i++) {
+            arr[i] = 1;
         };
 
-        new Thread(r, "Thread#1").start();
+        for (int i = 0; i < size; i++) {
+        arr[i] = (float)(arr[i] * Math.sin(0.2f + i / 5) * Math.cos(0.2f + i / 5) * Math.cos(0.4f + i / 2));
+        };
+    }
+
+    private static void createArrTwo(int h, float[] arr) {
+        float[] a1 = new float[h];;
+        float[] a2 = new float[h];
+        System.arraycopy(arr, 0, a1, 0, h);
+        System.arraycopy(arr, h, a2, 0, h);
+
+         Runnable r1 = new Runnable() {
+            @Override
+            public void run() {
+                createArrOne(h, a1);
+            }
+        };
+        Runnable r2 = new Runnable() {
+            @Override
+            public void run() {
+                createArrOne(h, a2);
+            }
+        };
+       new Thread(r1, "Thread#1").start();
+       new Thread(r2, "Thread#2").start();
+        System.arraycopy(a1, 0, arr, 0, h);
+        System.arraycopy(a2, 0, arr, h, h);
+
+    }
+
+    public static void main(String[] args) {
+        long a = System.currentTimeMillis();
+        createArrOne(size, arr);
+        long b = System.currentTimeMillis();
+        System.out.printf("res1=%d\n",b - a);
+
+        long a1 = System.currentTimeMillis();
+        createArrTwo(h, arr);
+        long b1 = System.currentTimeMillis();
+        System.out.printf("res2=%d\n",b1 - a1);
+       /* new Thread(r, "Thread#1").start();
         new Thread(r, "Thread#2").start();
-        new Thread(r, "Thread#3").start();
+        new Thread(r, "Thread#3").start();*/
     }
 
     private static void joinExample() {
