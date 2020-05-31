@@ -27,8 +27,10 @@ public class SocketThread extends Thread {
             out = new DataOutputStream(socket.getOutputStream());
             listener.onSocketReady(this, socket);
             while (!isInterrupted()) {
-                String msg = in.readUTF();
-                listener.onReceiveString(this, socket, msg);
+                while(in.available()>0) {
+                    String msg = in.readUTF();
+                    listener.onReceiveString(this, socket, msg);
+                }
             }
         } catch (IOException exception) {
             listener.onSocketException(this, exception);
@@ -52,6 +54,31 @@ public class SocketThread extends Thread {
     public void close() {
         try {
             in.close();
+        } catch (IOException exception) {
+            listener.onSocketException(this, exception);
+        }
+        try {
+            out.flush();;
+        } catch (IOException exception) {
+            listener.onSocketException(this, exception);
+        }
+        interrupt();
+        try {
+            socket.close();
+        } catch (IOException exception) {
+            listener.onSocketException(this, exception);
+        }
+        listener.onSocketStop(this);
+    }
+
+    public void disconnect() {
+        try {
+            in.close();
+        } catch (IOException exception) {
+            listener.onSocketException(this, exception);
+        }
+        try {
+            out.flush();;
         } catch (IOException exception) {
             listener.onSocketException(this, exception);
         }

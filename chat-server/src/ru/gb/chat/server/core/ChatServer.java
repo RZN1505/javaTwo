@@ -9,10 +9,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
 
 public class ChatServer implements ServerSocketThreadListener, SocketThreadListener {
 
     private ServerSocketThread server;
+    private Vector <SocketThread> clientTreadSockets = new Vector <>();
     private final DateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss: ");
 
 
@@ -48,6 +50,7 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
 
     @Override
     public void onServerStop(ServerSocketThread thread) {
+
         putLog("Server stopped");
     }
 
@@ -65,7 +68,8 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
     public void onSocketAccepted(ServerSocketThread thread, ServerSocket server, Socket socket) {
         putLog("Client connected");
         String name = "SocketThread " + socket.getInetAddress() + ":" + socket.getPort();
-        new SocketThread(name, this, socket);
+        SocketThread sTread = new SocketThread(name, this, socket);
+        clientTreadSockets.addElement(sTread);
     }
 
     @Override
@@ -85,15 +89,22 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
     @Override
     public void onSocketStop(SocketThread thread) {
         putLog("Client disconnected");
+        String initName = thread.getName();
+        clientTreadSockets.removeIf(cts -> (cts.getName() == initName));
     }
 
     @Override
     public void onSocketReady(SocketThread thread, Socket socket) {
+
         putLog("Client is ready to chat");
+
     }
 
     @Override
     public void onReceiveString(SocketThread thread, Socket socket, String msg) {
+        for (SocketThread clientTreadSocket : clientTreadSockets) {
+            clientTreadSocket.sendMessage("echoAll: " + msg);
+        };
         thread.sendMessage("echo: " + msg);
     }
 

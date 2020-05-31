@@ -60,6 +60,7 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         btnSend.addActionListener(this);
         tfMessage.addActionListener(this);
         btnLogin.addActionListener(this);
+        btnDisconnect.addActionListener(this);
 
         panelTop.add(tfIPAddress);
         panelTop.add(tfPort);
@@ -71,6 +72,9 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         panelBottom.add(btnDisconnect, BorderLayout.WEST);
         panelBottom.add(tfMessage, BorderLayout.CENTER);
         panelBottom.add(btnSend, BorderLayout.EAST);
+
+        panelTop.setVisible(true);
+        panelBottom.setVisible(false);
 
         add(scrollLog, BorderLayout.CENTER);
         add(scrollUser, BorderLayout.EAST);
@@ -89,7 +93,13 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         } else if (src == btnSend || src == tfMessage) {
             sendMessage();
         } else if (src == btnLogin) {
+            panelTop.setVisible(false);
+            panelBottom.setVisible(true);
             connect();
+        } else if (src == btnDisconnect) {
+            panelTop.setVisible(true);
+            panelBottom.setVisible(false);
+            disconnect();
         } else {
             throw new RuntimeException("Unknown source: " + src);
         }
@@ -99,6 +109,15 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
         try {
             Socket socket = new Socket(tfIPAddress.getText(), Integer.parseInt(tfPort.getText()));
             socketThread = new SocketThread("Client", this, socket);
+        } catch (IOException exception) {
+            showException(Thread.currentThread(), exception);
+        }
+    }
+
+    private void disconnect() {
+        try {
+            Socket socket = new Socket(tfIPAddress.getText(), Integer.parseInt(tfPort.getText()));
+            socketThread.disconnect();
         } catch (IOException exception) {
             showException(Thread.currentThread(), exception);
         }
