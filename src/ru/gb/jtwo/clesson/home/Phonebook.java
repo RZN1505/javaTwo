@@ -1,6 +1,4 @@
-package ru.gb.jtwo.clesson.online;
-
-import ru.gb.jtwo.clesson.online.Person;
+package ru.gb.jtwo.clesson.home;
 
 import java.util.ArrayList;
 import java.util.HashMap;

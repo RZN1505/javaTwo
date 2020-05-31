@@ -1,4 +1,4 @@
-package ru.gb.jtwo.clesson.online;
+package ru.gb.jtwo.clesson.home;
 
 import java.util.Arrays;
 import java.util.HashMap;

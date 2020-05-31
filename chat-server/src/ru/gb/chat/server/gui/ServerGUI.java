@@ -1,4 +1,6 @@
-package ru.gb.jtwo.dlesson.online.online;
+package ru.gb.chat.server.gui;
+
+import ru.gb.chat.server.core.ChatServer;
 
 import javax.swing.*;
 import java.awt.*;

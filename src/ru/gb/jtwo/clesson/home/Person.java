@@ -1,4 +1,4 @@
-package ru.gb.jtwo.clesson.online;
+package ru.gb.jtwo.clesson.home;
 
 public class Person {
 

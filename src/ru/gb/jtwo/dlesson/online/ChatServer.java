@@ -1,4 +1,4 @@
-package ru.gb.jtwo.dlesson.online.online;
+package ru.gb.jtwo.dlesson.online;
 
 public class ChatServer {
     public void start(int port) {
