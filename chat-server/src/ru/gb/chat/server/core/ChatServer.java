@@ -1,6 +1,5 @@
 package ru.gb.chat.server.core;
 
-
 import ru.gb.jtwo.network.ServerSocketThread;
 import ru.gb.jtwo.network.ServerSocketThreadListener;
 import ru.gb.jtwo.network.SocketThread;
@@ -102,5 +101,4 @@ public class ChatServer implements ServerSocketThreadListener, SocketThreadListe
     public void onSocketException(SocketThread thread, Throwable throwable) {
         throwable.printStackTrace();
     }
-
 }

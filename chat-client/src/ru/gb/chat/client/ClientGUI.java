@@ -1,7 +1,5 @@
 package ru.gb.chat.client;
 
-
-
 import ru.gb.jtwo.network.SocketThread;
 import ru.gb.jtwo.network.SocketThreadListener;
 
@@ -187,6 +185,4 @@ public class ClientGUI extends JFrame implements ActionListener, Thread.Uncaught
     public void onSocketException(SocketThread thread, Throwable throwable) {
         showException(thread, throwable);
     }
-
-
 }
